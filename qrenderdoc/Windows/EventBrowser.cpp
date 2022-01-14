@@ -1022,7 +1022,15 @@ private:
     ret.action = action;
     ret.effectiveEID = actionRange.back().eventId;
     if(actionRange.back().flags & ActionFlags::PopMarker)
+    {
       ret.effectiveEID--;
+      if(actionRange.size() >= 2)
+      {
+        // Set effective event ID to last action-like event that happened before PopMarker. This will allow
+        // us to see the last used render targets in Texture View even if they were unbound before popping marker.
+        ret.effectiveEID = actionRange[actionRange.size() - 2].eventId;
+      }
+    }
 
     ret.row2action[0] = 0;
 
